@@ -18,8 +18,15 @@ RIGHT_IN2 = 27
 class Global_Vars:
     pan_angle = 90
     tilt_angle = 90
+    speed = 40
 
 app = Flask(__name__)
+
+@app.after_request
+def add_headers(response):
+    response.headers['Cross-Origin-Opener-Policy'] = 'same-origin'
+    response.headers['Cross-Origin-Embedder-Policy'] = 'require-corp'
+    return response
 
 @app.before_first_request
 def init_camera():
@@ -98,32 +105,33 @@ def index():
 def video():
     return Response(get_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-
 @app.route('/keypress', methods=['POST'])
 def keypress():
     data = request.get_json()
     key = data.get('key')
+    
+    print(f"Received keypress: {key}")
 
     if key == 'w':
-        motor_controller.set_motor(255, 255, "forward")
+        motor_controller.set_motor(Global_Vars.speed, Global_Vars.speed, "forward")
 
     elif key == 's':
-        motor_controller.set_motor(255, 255, "backward")
+        motor_controller.set_motor(Global_Vars.speed, Global_Vars.speed, "backward")
 
     elif key == 'a':
-        motor_controller.set_motor(0, 255, "forward")
+        motor_controller.set_motor(0, Global_Vars.speed, "forward")
 
     elif key == 'd':
-        motor_controller.set_motor(255, 0, "forward")
+        motor_controller.set_motor(Global_Vars.speed, 0, "forward")
 
     elif key == 'stop':
         motor_controller.stop()
 
-    elif key == 'ArrowLeft':
+    elif key == 'ArrowRight':
         Global_Vars.pan_angle = max(0, Global_Vars.pan_angle - 2)
         pi.hardware_PWM(PAN_PIN, 50, angle_to_duty(Global_Vars.pan_angle))
 
-    elif key == 'ArrowRight':
+    elif key == 'ArrowLeft':
         Global_Vars.pan_angle = min(180, Global_Vars.pan_angle + 2)
         pi.hardware_PWM(PAN_PIN, 50, angle_to_duty(Global_Vars.pan_angle))
 
@@ -135,8 +143,22 @@ def keypress():
         Global_Vars.tilt_angle = min(180, Global_Vars.tilt_angle + 2)
         pi.hardware_PWM(TILT_PIN, 50, angle_to_duty(Global_Vars.tilt_angle))
 
-    return '', 204
+    elif key == '1':
+        Global_Vars.speed = 40
 
+    elif key == '2':
+        Global_Vars.speed = 80
+
+    elif key == '3':
+        Global_Vars.speed = 120
+
+    elif key == '4':
+        Global_Vars.speed = 160
+
+    elif key == '5':
+        Global_Vars.speed = 200
+
+    return '', 204
 
 if __name__ == '__main__':
     pi = pigpio.pi()
