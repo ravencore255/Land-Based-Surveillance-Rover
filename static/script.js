@@ -5,14 +5,6 @@ function toggleSidebar() {
     toggleBtn.classList.toggle('open');
 }
 
-document.getElementById('controlMode').addEventListener('change', (e) => {
-    fetch('/control', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mode: e.target.value })
-    });
-});
-
 document.addEventListener('keydown', (e) => {
     let data = { key: e.key }
     fetch('/keypress', {
@@ -28,14 +20,6 @@ document.addEventListener('keyup', (e) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ key: 'stop' })
     })
-});
-
-document.getElementById('resolution').addEventListener('change', (e) => {
-    fetch('/set_res', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ resolution: e.target.value })
-    });
 });
 
 document.addEventListener('click', function (e) {

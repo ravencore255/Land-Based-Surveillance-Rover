@@ -7,22 +7,6 @@
 
 <body>
     <div id="sidebar" class="sidebar">
-        <br>
-        <h1>Control Mode</h1>
-        <select id="controlMode" class="custom-select">
-            <option value="rc">RC Control</option>
-            <option value="web">Web Control</option>
-        </select><br>
-
-        <h1>Resolution</h1>
-        <select id="resolution" class="custom-select">
-            {% for res_value, res_label in resolutions %}
-            <option value="{{ res_value }}">{{ res_label }}</option>
-            {% endfor %}
-        </select><br><br>
-
-        <hr style="border: 0; height: 3px; background: #444; margin: 10px 0;">
-
         <h1>Capture</h1>
 
         <h2>Snapshot</h2>
